@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+import os
 from typing import Any, Dict, List, Optional, Tuple
 
 from models.meter_reading import MeterReading
@@ -191,16 +192,22 @@ class MemoryRepository(DataRepository):
 
 
 def create_repository(storage_type: str, **kwargs: Any) -> DataRepository:
+    def _normalize_csv_path(path: str) -> str:
+        normalized = os.path.normpath(path)
+        # Accept directory-style inputs (existing directory or trailing separator) and map to default filename.
+        if os.path.isdir(normalized) or path.endswith(("/", "\\")):
+            return os.path.join(normalized, "readings.csv")
+        return normalized
+
     st = (storage_type or "sqlite").lower()
     if st == "sqlite":
         path = kwargs.get("db_path") or kwargs.get("database_path") or "data/tneb_readings.db"
         return SQLiteRepository(path)
     if st == "csv":
         path = kwargs.get("csv_path") or kwargs.get("backup_path") or "data/backups/readings.csv"
-        return CSVRepository(path)
+        return CSVRepository(_normalize_csv_path(path))
     if st == "memory":
         return MemoryRepository()
     # default fallback
     return MemoryRepository()
-
 
