@@ -1,54 +1,91 @@
 # TNEB Meter Reading Manager
 
-Desktop app to manage TNEB/TANGEDCO electricity meter readings (R/Y/B), calculate bi‑monthly bills with tariff slabs, and export reports to Excel.
+[![CI](https://github.com/vishnuskandha/tneb_manager/actions/workflows/ci.yml/badge.svg)](https://github.com/vishnuskandha/tneb_manager/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+A desktop application to manage TNEB/TANGEDCO electricity meter readings for the three-meter (R/Y/B) residential setup. It records readings across billing cycles, calculates bi-monthly bills using the current TNEB tariff slabs, recommends load rotation to stay under higher slab rates, and exports reports in the official TANGEDCO Excel format.
 
 ## Features
-- Clean Tkinter GUI for reading input and validation
-- Bill calculation with slab breakdown and threshold warnings
-- Results panel and rotation recommendations
-- Exports: TANGEDCO format, summary, and detailed history (Excel/CSV)
-- Storage: SQLite (default) or CSV, with backup/restore
+
+- **Tkinter GUI** for entering and validating meter readings (R, Y, B) with a date picker.
+- **Slab-based bill calculation** with a per-meter tariff breakdown and marginal-rate tracking.
+- **Rotation recommendations** that flag meters approaching the slab threshold and estimate combined vs. separate billing economics.
+- **Reports and exports**: TANGEDCO-format Excel workbook, summary report, and detailed history in XLSX or CSV.
+- **Flexible storage**: SQLite (default), CSV, or in-memory, with backup/restore and migration between backends.
+- **CLI mode** for scripted use: reading demo, exports, backups, restores, and storage migration all available from `main.py --cli`.
+
+## Screenshots
+
+Screenshots are not currently included. To add some, capture the main window and results panel and place the images under a `docs/` or `screenshots/` folder, then link them here.
+
+## Requirements
+
+- Python 3.8+ with Tk support (see [build notes](#build-a-windows-exe-pyinstaller) for Tk on Linux).
+- Dependencies listed in `requirements.txt`.
 
 ## Quick start
 
-Requirements: Python 3.8+ and Tk support.
+Run from source:
 
-Install dependencies:
 ```powershell
 python -m pip install -r requirements.txt
-```
-
-Run the app:
-```powershell
 python main.py
 ```
 
+Run the CLI demo instead of the GUI:
+
+```powershell
+python main.py --cli
+```
+
+## Running tests
+
+```powershell
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
 ## Build a Windows exe (PyInstaller)
-A helper script builds a single-file exe:
+
+The `build_exe.ps1` helper creates a virtual environment, installs dependencies plus PyInstaller, and produces a single-file, windowed executable:
+
 ```powershell
 ./build_exe.ps1
 ```
+
 Output: `dist\tneb_manager.exe`
 
 Notes:
+
 - If `tkinter` is missing on Linux, install it via your package manager (e.g., `sudo apt-get install python3-tk`).
 - If you add new resource folders, update `build_exe.ps1` to include them via `--add-data`.
 
 ## Project layout
+
 ```
-models/   # billing logic and models
-gui/      # Tkinter UI components
-data/     # persistence, exports, and config helpers
-main.py   # entrypoint
+main.py                 # Entry point (GUI + CLI)
+models/                 # Billing logic, tariff calculator, and meter models
+gui/                    # Tkinter UI components (main window, widgets, bill utils)
+data/                   # Persistence (SQLite/CSV), Excel export, and config helpers
+test_*.py               # pytest test suite (bill calc, persistence, export)
 ```
+
+## Storage and runtime data
+
+Runtime artifacts (database, CSV backups, and generated config) live under `data/` and are excluded from version control via `.gitignore`. The app writes:
+
+- `data/tneb_readings.db` — default SQLite database
+- `data/backups/` — CSV backups
+- `data/config.json` — generated configuration
 
 ## Credits
-See Help → About in the app. Credits are defined in `credits.py`.
+
+Credits are shown in Help -> About in the app and are defined in `credits.py`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Security Policy](SECURITY.md).
 
 ## License
-MIT — see `LICENSE`.
 
-## Repository hygiene
-This repo excludes build and runtime artifacts via `.gitignore`:
-- `dist/`, `build/`, `*.spec`, `.venv/`, `__pycache__/`
-- Runtime data under `data/` (DB, backups, CSVs, config)
+MIT — see [LICENSE](LICENSE).

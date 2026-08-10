@@ -39,6 +39,12 @@ class DatabaseManager:
         except Exception as exc:  # pragma: no cover - best-effort
             raise DatabaseError(f"Failed to close database: {exc}") from exc
 
+    def __enter__(self) -> "DatabaseManager":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
+
     @contextmanager
     def _tx(self):
         try:
