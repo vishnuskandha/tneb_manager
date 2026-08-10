@@ -5,6 +5,7 @@ import unittest
 from models import MeterManager
 from models.tariff_calculator import TariffCalculator
 from models.meter_reading import MeterReading
+from data.repository import create_repository
 from gui.bill_utils import BillCalculationHelper, RotationOptimizer, ThresholdMonitor, get_overall_summary
 
 
@@ -26,7 +27,7 @@ class TestBillCalculationHelpers(unittest.TestCase):
 
 class TestRotationAndThreshold(unittest.TestCase):
 	def setUp(self):
-		self.manager = MeterManager()
+		self.manager = MeterManager(repository=create_repository("memory"))
 		# Seed prior reading to enable consumption
 		from datetime import date, timedelta
 		prior = date.today() - timedelta(days=60)
@@ -50,7 +51,7 @@ class TestRotationAndThreshold(unittest.TestCase):
 
 class TestOverallSummary(unittest.TestCase):
 	def test_summary_structure(self):
-		mm = MeterManager()
+		mm = MeterManager(repository=create_repository("memory"))
 		summary = get_overall_summary(mm)
 		self.assertIn("total_units", summary)
 		self.assertIn("total_cost", summary)

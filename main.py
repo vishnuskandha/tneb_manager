@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 from datetime import date, timedelta
 
 from models import MeterManager
@@ -71,7 +72,18 @@ def run_gui(storage: str = "sqlite", db_path: str | None = None, csv_path: str |
 	app.run()
 
 
+def _configure_unicode_stdio() -> None:
+    """Ensure the rupee symbol and other Unicode output print on any console."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
 def main():
+	_configure_unicode_stdio()
+
 	parser = argparse.ArgumentParser(description="TNEB Meter Reading Manager")
 	parser.add_argument("--cli", "-c", action="store_true", help="Run CLI demo instead of GUI")
 	parser.add_argument("--threshold", type=float, default=None, help="Set custom rotation threshold (default: 350)")

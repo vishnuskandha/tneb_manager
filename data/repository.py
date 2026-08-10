@@ -54,6 +54,12 @@ class SQLiteRepository(DataRepository):
     def close(self) -> None:
         self.db.close()
 
+    def __enter__(self) -> "SQLiteRepository":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.close()
+
     def save_reading(self, meter_reading: MeterReading) -> int:
         return self.db.insert_reading(meter_reading)
 
