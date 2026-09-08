@@ -18,7 +18,8 @@ def print_breakdown(title: str, breakdown):
 		print(f"  {start}-{end} units @ ₹{row['rate']:.2f}: {row['units']} units -> ₹{row['cost']}")
 
 
-def run_cli_demo(storage: str = "sqlite", db_path: str | None = None, csv_path: str | None = None) -> None:
+def run_cli_demo(storage: str = "memory", db_path: str | None = None, csv_path: str | None = None) -> None:
+	"""Run the sample CLI workflow without persisting demo readings by default."""
 	repo = create_repository(storage, db_path=db_path, csv_path=csv_path)
 	manager = MeterManager(repository=repo)
 
@@ -187,7 +188,12 @@ def main():
 			return
 
 	if args.cli:
-		run_cli_demo(storage=backend, db_path=db_path, csv_path=csv_path)
+		# Demo data must not silently pollute the configured production store.
+		# Persistent storage is opt-in via an explicit --storage argument.
+		demo_backend = args.storage or "memory"
+		demo_db_path = db_path if args.storage == "sqlite" else None
+		demo_csv_path = csv_path if args.storage == "csv" else None
+		run_cli_demo(storage=demo_backend, db_path=demo_db_path, csv_path=demo_csv_path)
 	else:
 		# Environment toggles for GUI behavior (read by GUI components if implemented later)
 		if args.auto_calculate:
