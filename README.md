@@ -1,5 +1,15 @@
 # TNEB Meter Reading Manager
 
+
+<!-- README polish: repository metadata badges -->
+<p>
+  <a href="https://github.com/vishnuskandha/tneb_manager"><img alt="GitHub stars" src="https://img.shields.io/github/stars/vishnuskandha/tneb_manager?style=for-the-badge&logo=github&label=Stars"></a>
+  <a href="https://github.com/vishnuskandha/tneb_manager/fork"><img alt="GitHub forks" src="https://img.shields.io/github/forks/vishnuskandha/tneb_manager?style=for-the-badge&logo=github&label=Forks"></a>
+  <a href="https://github.com/vishnuskandha/tneb_manager/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/vishnuskandha/tneb_manager?style=for-the-badge&logo=github&label=Issues"></a>
+  <a href="https://github.com/vishnuskandha/tneb_manager/commits"><img alt="Last commit" src="https://img.shields.io/github/last-commit/vishnuskandha/tneb_manager?style=for-the-badge&logo=git&label=Updated"></a>
+</p>
+<!-- End README polish -->
+
 [![CI](https://github.com/vishnuskandha/tneb_manager/actions/workflows/ci.yml/badge.svg)](https://github.com/vishnuskandha/tneb_manager/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
